@@ -66,7 +66,7 @@ def piglatin_sentence(sentence):  # Añadido separador de palabras 20-2-2019
                         cleanList.append(word[0])
                         cleanList.append(word[1:])
                     else:  # Caracter especial NO al principio
-                        if (i == (len(word)-1)):  # Caracter especial al final
+                        if (i == (len(word) - 1)):  # Caracter especial al final
                             cleanList.append(auxvar)
                             cleanList.append(word[i])
                         else:  # Caracter especial en medio
@@ -85,20 +85,29 @@ def piglatin_sentence(sentence):  # Añadido separador de palabras 20-2-2019
     for word in cleanList:
         auxvar = piglatin_word(word)
         if not auxvar.isalpha():
-            sentence+=auxvar+" "
+            sentence += auxvar + " "
         else:
-            sentence+=" "
-            sentence+=auxvar
+            sentence += " "
+            sentence += auxvar
             
         auxvar = ""
-
     return  sentence[1:]
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        print(piglatin_sentence(sys.argv[1]))
-    else:
+        if (sys.argv[1].__eq__("-f")):
+            print("LEYENDO FICHERO...")
+            f = open(sys.argv[2], "r")
+            r = piglatin_sentence(f.read())
+            auxvar = sys.argv[2][:-4]
+            w = open(auxvar + "_piglatin.txt", "w")
+            w.write(r)
+            print("FICHERO CREADO...")
+        else:
+            print(piglatin_sentence(sys.argv[1]))
+    else:  # Sin -f
+        print (sys.argv)
         inp = "cualquiercosa"
         while inp:
             print("Introduce una frase:")
