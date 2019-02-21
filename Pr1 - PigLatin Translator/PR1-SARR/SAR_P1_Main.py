@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """#! -*- encoding: utf8 -*- PYTHON2"""
+from distutils.command.clean import clean
 """PYTHON3"""
 # coding=utf-8
 """
@@ -53,27 +54,45 @@ def piglatin_word(word):
             return word
 
 
-def piglatin_sentence(sentence): #Añadido separador de palabras 20-2-2019
+def piglatin_sentence(sentence):  # Añadido separador de palabras 20-2-2019
     rawList = sentence.split(" ")
     cleanList = []
     auxvar = ""
     for word in rawList:
         if "," in word or ";" in word or "." in word or "?" in word or "!" in word:
-            for i in range(0, len(word)): #Palabra con caracter especial
+            for i in range(0, len(word)):  # Palabra con caracter especial
                 if word[i] in ",;.?!":
-                    if auxvar.__eq__(""): #Caracter especial al principio
+                    if auxvar.__eq__(""):  # Caracter especial al principio
                         cleanList.append(word[0])
                         cleanList.append(word[1:])
-                else:        
-                    auxvar + word[i]
-                
-                if (i == len(word)):
-                    auxvar = ""
-        else: #Palabra sin caracter especial
-            cleanList.append(word)    
-    #sentence = piglatin_word(sentence)
-    print(cleanList)
-    return  sentence
+                    else:  # Caracter especial NO al principio
+                        if (i == (len(word)-1)):  # Caracter especial al final
+                            cleanList.append(auxvar)
+                            cleanList.append(word[i])
+                        else:  # Caracter especial en medio
+                            cleanList.append(auxvar)
+                            cleanList.append(word[i])
+                            cleanList.append(word[i + 1:])
+                else:       
+                    auxvar = auxvar + str(word[i])                
+        else:  # Palabra sin caracter especial
+            cleanList.append(word) 
+
+        auxvar = ""     
+        
+    # sentence = piglatin_word(sentence)
+    sentence = ""
+    for word in cleanList:
+        auxvar = piglatin_word(word)
+        if not auxvar.isalpha():
+            sentence+=auxvar+" "
+        else:
+            sentence+=" "
+            sentence+=auxvar
+            
+        auxvar = ""
+
+    return  sentence[1:]
 
 
 if __name__ == "__main__":
