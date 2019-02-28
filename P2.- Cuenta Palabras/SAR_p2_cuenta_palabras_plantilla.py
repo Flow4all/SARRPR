@@ -12,26 +12,48 @@ def sort_dic(d):
     for key, value in sorted(d.items(), key=itemgetter(1), reverse=True):
         yield key, value
 
-def text_statistics(filename, to_lower=True, remove_stopwords=True):
-    f2=open(name,r)
+def text_statistics(filename, to_lower, remove_stopwords):
+    fichero=open(filename)
+    texto=fichero.read()
     if to_lower:
-        f2.lowercase()
-    l=f2.readlines()
-    lines = len(l)
-    f=clean_text(f2)
-    f=f.split(" ")
-    words = len(f)
+        texto = texto.lower()
+    texto_limpio=clean_text(texto)
+    palabras=texto_limpio.split(" ")
     if remove_stopwords:
-        stopwords = (clean_text(open("nombre del fichero",r))).split(" ")
-        for w in f:
-            if not word in stopwords:
-                aux = aux.append()
-        f = aux        
+        stopwords = (open("stopwords_en.txt")).read().split("\n")
+        aux=[]
+        for palabra in palabras:
+            if not palabra in stopwords:
+                aux.append(palabra)
+    lineas=texto.split("\n")
+    lines = len(lineas)
+    words = len(palabras)
+           
     d={}
-    for w in f:
-        d[w] = d.get(w,0) + 1
+    s={}
+    symbols=0
+    if remove_stopwords:
+        vocabulario=aux
+    else:
+        vocabulario=palabras
+    for palabra in vocabulario:
+        for i in range(len(palabra)):
+    	      letra = palabra[i]
+    	      s[letra] = s.get(letra,0) + 1
+        d[palabra] = d.get(palabra,0) + 1
+        symbols+=len(palabra)
+    diccionario=sort_dic(d)
+    for i in diccionario:
+        print(i)
+        
     print ('COMPLETAR')
-
+    print("Lines: "+str(lines))
+    if remove_stopwords:
+        print("Number words (without stopwords): "+str(len(aux)))
+    print("Number words (with stopwords): "+str(words))
+    print("Vocabulary size: "+str(len(d)))
+    print("Number of symbols: "+str(symbols))
+    print("Number of different symbols: "+str(len(s)))
 
 def syntax():
     print ("\n%s filename.txt [to_lower?[remove_stopwords?]\n" % sys.argv[0])
@@ -39,12 +61,11 @@ def syntax():
 
 if __name__ == "__main__":
     if len(sys.argv) <= 2:
-        syntax()
-    name = sys.argv[1]
-    lower = False
-    stop = False
+        name = sys.argv[1]
+        lower = True
+        stop = False
     if len(sys.argv) > 2:
         lower = (sys.argv[2] in ('1', 'True', 'yes'))
         if len(sys.argv) > 3:
             stop = (sys.argv[3] in ('1', 'True', 'yes'))
-    text_statistics(name, to_lower=lower, remove_stopwords=stop)
+    text_statistics(name, lower, stop)
